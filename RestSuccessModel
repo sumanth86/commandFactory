@@ -1,0 +1,15 @@
+public virtual class RestSuccessModel implements IValueObject
+{
+    public String status = 'SUCCESS';
+    public Object response;
+ 
+    public RestSuccessModel(Object response)
+    {
+        this.response = response;
+    }
+    
+    public String serialize()
+    {
+        return JSON.serialize(this);
+    }
+}
