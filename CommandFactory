@@ -1,0 +1,44 @@
+global class CommandFactory 
+{
+    public static ICommand getCommand(String commandName)
+    {
+        return getCommand(commandName, null);   
+    }
+    
+    /**
+     * Get a command based on the name. Uses reflection to get the command class
+     *
+     * @param commandName  The name of the command
+     * @param params  The parameters to set after instantiation
+     */    
+    public static ICommand getCommand(String commandName, Map<String, String> params)
+    {
+        ICommand command = createCommand(commandName);
+        
+        if (command == null) {
+            Type t = Type.forName(commandName+'Command');
+            if (t == null) {
+                throw new InvalidCommandException('Command not found');
+            }
+            command = (ICommand) t.newInstance();
+        }
+        
+        if (command == null) {
+           // throw new Exception('Command not found');
+        }
+        
+        if (params != null) {
+            command.setParameters(params);
+        }
+      
+        return command;
+    }
+    
+    private static ICommand createCommand(String commandName)
+    {
+        if (commandName.equalsIgnoreCase('createCase')) {
+            return new CreateCaseCommand();
+        }
+        return null;
+    }
+}
