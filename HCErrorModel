@@ -1,0 +1,43 @@
+public class HCErrorModel implements IValueObject
+{
+    public String status = 'ERROR';
+    public HCErrorModel.ErrorDetailsModel error = new HCErrorModel.ErrorDetailsModel();
+    
+    public HCErrorModel() {}
+    
+    public HCErrorModel(String errorCode)
+    {
+        this.setErrorCode(errorCode);
+        this.setMessage(getErrorMessageForCode(errorCode));
+    }
+     
+    public void setMessage(String message)
+    {
+        this.error.message = message;
+    }
+    
+    public void setErrorCode(String errorCode)
+    {
+        this.error.errorCode = errorCode;
+    }
+    
+    public class ErrorDetailsModel
+    {
+        public String message;
+       
+        public String errorCode {
+            get {
+                if (errorCode == null) {
+                    errorCode = 'HC-COMMON-00000'; // Here we can have error code mapping.
+                }
+                return errorCode;
+            }
+            set;
+        }
+
+    }
+    public String serialize()
+    {
+        return JSON.serialize(this);
+    }
+}
