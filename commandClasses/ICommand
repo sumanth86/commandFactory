@@ -1,0 +1,7 @@
+public interface ICommand
+{
+    ICommand setParameters(Map<String, String> params);
+    ICommand execute();
+    ICommand validate();
+    Object getResult();
+}
