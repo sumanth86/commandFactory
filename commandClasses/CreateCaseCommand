@@ -1,0 +1,101 @@
+/****************************************
+* Description: This is used to create case using Rest API
+*  
+******************************************/
+public virtual class CreateCaseCommand extends BaseCaseCommand 
+{
+    protected String strSubject;
+    protected String strContentType;
+    
+    
+    //This is to set the request parameters 
+    public override ICommand setParameters(Map<String, String> params)
+    {
+        system.debug('params >>> '+params);
+        system.debug('params key >>> '+params.keySet());
+        system.debug('params values >>> '+params.values());
+        super.setParameters(params);
+        
+       if (params.containsKey('subject')) {
+            this.setSubject(params.get('subject'));
+        }
+        
+        if (params.containsKey('contentText')) {
+            this.setContentText(params.get('contentText'));
+        }
+
+        return this;
+    }
+     
+    public ICommand setSubject(String strSubject)
+    {
+        this.strSubject = strSubject;
+        return this;
+    }
+     
+    //This is to validate the required fields
+    public override ICommand validate()
+    {
+        // Apply validation logic here      
+        this.validated = true;
+        return this;
+    }
+    
+    //This is to create Petitioner and Target Accounts in salesforce if not exists. It also create Case and Petition Details    
+    public override ICommand execute()
+    {
+        Savepoint sp;
+        CaseAPIModel model = new CaseAPIModel();
+        try 
+        {
+            this.checkValidation();
+
+            Account targetAcc;  
+            sp = Database.setSavepoint();            
+                       
+            //create case
+            case newCase = setCaseFields(targetAcc);
+            //newCase.AccountId = petitionerAcc.Id;
+            insert newCase;
+            
+            model.caseId = newCase.Id; 
+            model.statusMessage = 'Success';
+            model.caseNumber = [select caseNumber from case where Id =: newCase.Id].caseNumber;
+            this.result = model;
+            return this;
+        }
+        catch(exception ex) 
+        {
+            if(sp != null){
+                Database.rollback(sp);
+            }           
+            String exceptionMsg = 'Error:' + ex.getMessage() + '-'+ex.getTypeName() + '-Line Number -'+ex.getLineNumber(); 
+            model.statusMessage = exceptionMsg;
+            this.result = model;
+            return this;
+        }
+        
+    }
+    
+    //This is to set the fields of Case
+    private Case setCaseFields(Account targetAcc)
+    {
+     
+        Case newCase = new Case();              
+        newCase.Origin = 'Web';
+        newCase.Status = 'New';
+        newCase.Subject = this.strSubject;   
+        newCase.Description = this.strContentText;
+        return newCase;
+    }
+    
+    // Sample Response
+    /*
+        [
+        
+         {
+          
+         }
+        ]
+    */
+}
