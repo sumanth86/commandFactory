@@ -1,0 +1,6 @@
+public interface IPageable 
+{
+    Pagination getPagination();
+    ICommand setPageSize(Integer pageSize);
+    ICommand setPageNumber(Integer pageNumber);
+}
