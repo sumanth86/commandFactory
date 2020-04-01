@@ -1,0 +1,10 @@
+public class PageableRestSuccessModel extends RestSuccessModel
+{
+    public Pagination pager { get; set; }
+    
+    public PageableRestSuccessModel(Object response, Pagination pager)
+    {
+        super(response);
+        this.pager = pager;
+    }
+}
