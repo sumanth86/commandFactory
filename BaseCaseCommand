@@ -1,0 +1,36 @@
+public abstract class BaseCaseCommand extends AbstractCommand
+{    
+    protected String caseId;
+    protected String accountId;
+    protected String secret;
+    
+    public virtual override ICommand setParameters(Map<String, String> params)
+    {
+        super.setParameters(params);
+        return this;
+    }
+    
+    protected Case getCase()
+    {
+        try {
+            return [SELECT Id, caseNumber FROM Case WHERE Id =: this.caseId];
+        }
+        catch(Exception ex) {
+            throw new IllegalArgumentException('INVALID_CASE_OWNERSHIP');
+        }
+    }
+    
+    public virtual override ICommand execute()
+    {
+        return this;
+    }
+    
+    /**
+     * Validate the required parameters
+     */
+    public virtual override ICommand validate()
+    {
+       this.validated = true;
+       return this;
+    }
+}
