@@ -1,0 +1,15 @@
+public virtual class RestErrorAuraModel implements IValueObject
+{
+    public String status = 'Error';
+    public Object response;
+ 
+    public RestErrorAuraModel(Object response)
+    {
+        this.response = response;
+    }
+    
+    public String serialize()
+    {
+        return JSON.serialize(this);
+    }
+}
