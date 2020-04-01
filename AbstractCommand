@@ -1,0 +1,54 @@
+public abstract class AbstractCommand implements ICommand 
+{
+    protected Map<String, String> params;
+    
+    /**
+     * Flag indicating if the class has been validated
+     */   
+    protected Boolean validated = false; 
+    
+    /**
+     * Object that holds the result
+     */
+    protected Object result;
+    
+    /**
+     * Check to see if validation has beend called
+     */
+    protected void checkValidation()
+    {
+        if (!this.validated) {
+            throw new CommandValidationException('EXCEPTION');   
+        }
+    }
+    
+    /**
+     * Set necessary parameters 
+     *
+     * @param params
+     */
+    public virtual ICommand setParameters(Map<String, String> params)
+    {
+        this.params = params;
+        return this;
+    }
+    
+    /**
+     * Execute the command
+     */
+    public abstract ICommand execute();
+    
+    /**
+     * Perform validation on the command
+     */
+    public abstract ICommand validate();
+    
+    /**
+     * Return the result executed result
+     */
+    public Object getResult()
+    {
+        return this.result;            
+    }
+    
+}
