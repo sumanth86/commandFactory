@@ -1,0 +1,53 @@
+@RestResource(urlMapping='/api/*')
+global class RestApiController 
+{
+    @HttpGet
+    global static IValueObject doGet()
+    {
+        return submit();
+    }
+    
+    @HttpPost
+    global static IValueObject doPost()
+    {
+        return submit();
+    }
+    
+    global static IValueObject submit()
+    {
+        Object result;
+        ICommand command;
+        
+        RestRequest req = RestContext.request;
+        Restresponse res = RestContext.response;
+        res.addHeader('Content-Type', 'application/json');
+        
+        if((UDConstants.BOOLEAN_TRUE).equalsIgnoreCase('false')){
+                res.statuscode = (Integer.valueOf('500'));
+            return null; 
+        }else{
+        
+        String commandName = req.params.get('cmd');
+        system.debug('commandName:'+commandName);
+        try { 
+            command = CommandFactory.getCommand(commandName, req.params);
+            system.debug('command:'+command);
+            command.validate(); 
+            command.execute();  
+        } 
+        catch (Exception ex) {
+            //return new RestErrorModel(ex.getMessage());
+            return new HCErrorModel(ex.getMessage());
+        }
+
+        result = command.getResult();
+        
+        if (command instanceof IPageable) {
+            IPageable p = (IPageable) command;
+            return new PageableRestSuccessModel(result, p.getPagination());
+        } 
+        
+        return new RestSuccessModel(result);  
+    }
+    }
+}
