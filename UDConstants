@@ -1,0 +1,5 @@
+public class UDConstants
+{
+  public static final String BOOLEAN_TRUE = 'true';
+
+}
