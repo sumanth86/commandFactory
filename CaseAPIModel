@@ -1,0 +1,12 @@
+public class  CaseAPIModel implements IValueObject 
+{
+    public String caseId;
+    public String statusMessage;    
+    public String apiResponse;
+    public String caseNumber;
+    
+    public String serialize()
+    {
+        return JSON.serialize(this);
+    }
+}
