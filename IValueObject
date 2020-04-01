@@ -1,0 +1,4 @@
+global interface IValueObject 
+{
+    String serialize();
+}
