@@ -1,0 +1,5 @@
+public interface IValueObjectFactory
+{
+    List<IValueObject> collection(List<Object> items);
+    IValueObject model(Object item); 
+}
