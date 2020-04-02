@@ -1,0 +1,92 @@
+public class Pagination implements IValueObject 
+{
+    public Integer total { 
+        get {
+            if (total == null) {
+                total = 0;
+            }    
+            return total;
+        }
+        set;
+    }
+    
+    public Integer pages {
+        get { 
+            if (pages == null) {
+                pages = 1;
+            }
+            return pages;
+        }
+        set;
+    }
+    
+    public Integer currentPage { 
+        get {
+            if (currentPage == null) {
+                currentPage = 1;
+            }
+            return currentPage;
+        }
+        set;
+    }
+    
+    public Integer pageSize { 
+        get {
+            if (pageSize == null) {
+                pageSize = 10;
+            }
+            return pageSize;
+        }
+        set;
+    }
+    
+    public Integer getPageSize()
+    {
+        return pageSize;
+    }
+    
+    public void setPageSize(Integer pageSize)
+    {
+        this.pageSize = pageSize;
+    }
+    
+    public void setTotal(Integer total)
+    {
+        this.total = total;
+        this.pages = Integer.valueOf(Math.ceil(Double.valueof(this.total)/this.pageSize));
+    }
+    
+    public Integer getTotal()
+    {
+        return total;
+    }
+    
+    public void setCurrentPage(Integer currentPage)
+    {
+        this.currentPage = currentPage;
+    }
+    
+    public Integer getCurrentPage()
+    {
+        return currentPage;
+    }
+    
+    public Integer getPageOffset()
+    {
+        if (currentPage != null && pageSize != null) {
+            return (currentPage - 1) * pageSize; 
+        }
+        
+        return 0;
+    }
+    
+    public Integer getPages()
+    {
+        return this.pages;
+    }
+        
+    public String serialize()
+    {
+        return JSON.serialize(this);
+    }
+}
